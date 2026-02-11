@@ -1,0 +1,11 @@
+sentence-transformers
+transformers
+Pillow
+faiss-cpu
+fastapi
+uvicorn[standard]
+pandas
+numpy
+tqdm
+boto3
+python-dotenv

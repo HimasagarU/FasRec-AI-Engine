@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Environment
+.env
+
+# Data (images too large for git, CSV needed for API)
+data/images/
+!data/styles.csv
+
+# Artifacts (generated, too large for git)
+artifacts/text_embeddings.npy
+artifacts/image_embeddings.npy
+artifacts/product_ids.npy
+artifacts/text_index.faiss
+artifacts/image_index.faiss
+
+# Keep precomputed_recs.json (small, needed for serving)
+!artifacts/precomputed_recs.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Gemini
+.gemini/
