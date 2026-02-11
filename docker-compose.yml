@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: fasrec-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount local images directory into the container
+      - ./data/images:/app/data/images:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+  # Optional: Postgres for storing precomputed recs in DB
+  # Uncomment when ready to migrate from JSON to Postgres
+  #
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: fasrec-db
+  #   environment:
+  #     POSTGRES_DB: fasrec
+  #     POSTGRES_USER: fasrec
+  #     POSTGRES_PASSWORD: fasrec_secret
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+
+  # volumes:
+  #   pgdata:

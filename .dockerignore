@@ -1,0 +1,11 @@
+__pycache__
+*.pyc
+.git
+.env
+artifacts/text_embeddings.npy
+artifacts/image_embeddings.npy
+artifacts/product_ids.npy
+artifacts/text_index.faiss
+artifacts/image_index.faiss
+*.egg-info
+.pytest_cache

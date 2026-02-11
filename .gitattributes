@@ -1,0 +1,4 @@
+backend/artifacts/parsed_products.csv filter=lfs diff=lfs merge=lfs -text
+backend/artifacts/precomputed_recs.json filter=lfs diff=lfs merge=lfs -text
+artifacts/parsed_products.csv filter=lfs diff=lfs merge=lfs -text
+artifacts/precomputed_recs.json filter=lfs diff=lfs merge=lfs -text
