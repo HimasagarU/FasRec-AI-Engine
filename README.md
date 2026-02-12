@@ -4,6 +4,14 @@ A high-performance, content-based fashion recommendation system that suggests si
 
 🌐 **Live Demo:** [https://fashion-recommendation-engine.onrender.com/app](https://fashion-recommendation-engine.onrender.com/app)
 
+> **Note:** The demo is hosted on Render's free tier. It may take **30-60 seconds to wake up** after 15 minutes of inactivity. Please be patient! ⏳
+
+## 🎥 Demo
+
+![Demo Preview](https://via.placeholder.com/800x450.png?text=Add+Your+Demo+GIF+Here)
+
+*Watch the full video walkthrough [here](#link-to-youtube-or-loom).*
+
 ## ✨ Features
 
 *   **Multimodal Search**: Recommendations based on both visual similarity (CLIP) and semantic meaning (SBERT).
