@@ -8,9 +8,9 @@ A high-performance, content-based fashion recommendation system that suggests si
 
 ## 🎥 Demo
 
-![Demo Preview](https://via.placeholder.com/800x450.png?text=Add+Your+Demo+GIF+Here)
+<video controls src="https://github.com/HimasagarU/FasRec-AI-Engine/raw/main/fasrec_project_demo.mp4" width="100%"></video>
 
-*Watch the full video walkthrough [here](#link-to-youtube-or-loom).*
+*Direct link: [fasrec_project_demo.mp4](https://github.com/HimasagarU/FasRec-AI-Engine/raw/main/fasrec_project_demo.mp4)*
 
 ## ✨ Features
 
