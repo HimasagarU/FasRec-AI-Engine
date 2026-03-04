@@ -5,11 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FasRec — Smart Fashion Store</title>
-    <meta name="description" content="AI-powered fashion store with semantic search, visual search, outfit matching, and smart recommendations.">
+    <meta name="description"
+        content="AI-powered fashion store with semantic search, visual search, outfit matching, and smart recommendations.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ── Reset & Variables ────────────────────────── */
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         :root {
             --bg: #fafafa;
@@ -28,9 +35,9 @@
             --red-bg: #fef2f2;
             --blue: #2563eb;
             --blue-bg: #eff6ff;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow: 0 1px 3px rgba(0,0,0,0.08);
-            --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
             --radius: 8px;
             --radius-lg: 12px;
         }
@@ -65,7 +72,10 @@
             flex-shrink: 0;
         }
 
-        .logo span { color: var(--text-muted); font-weight: 400; }
+        .logo span {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
 
         /* ── Search Bar ──────────────────────────────── */
         .search-container {
@@ -92,10 +102,12 @@
 
         .search-container input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
         }
 
-        .search-container input::placeholder { color: var(--text-muted); }
+        .search-container input::placeholder {
+            color: var(--text-muted);
+        }
 
         .search-icon {
             position: absolute;
@@ -125,7 +137,10 @@
             gap: 0.3rem;
         }
 
-        .upload-btn:hover { background: var(--bg-hover); border-color: var(--border-hover); }
+        .upload-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-hover);
+        }
 
         /* ── Filters ─────────────────────────────────── */
         .filters {
@@ -147,7 +162,9 @@
             transition: border-color 0.15s;
         }
 
-        .filters select:hover { border-color: var(--border-hover); }
+        .filters select:hover {
+            border-color: var(--border-hover);
+        }
 
         /* ── Feature Banner ──────────────────────────── */
         .feature-banner {
@@ -163,7 +180,10 @@
             gap: 0.5rem;
         }
 
-        .feature-banner.visible { display: flex; }
+        .feature-banner.visible {
+            display: flex;
+        }
+
         .feature-banner .close-banner {
             margin-left: auto;
             cursor: pointer;
@@ -187,8 +207,13 @@
             color: var(--text-secondary);
         }
 
-        .search-mode-bar.visible { display: flex; }
-        .search-mode-bar strong { color: var(--text); }
+        .search-mode-bar.visible {
+            display: flex;
+        }
+
+        .search-mode-bar strong {
+            color: var(--text);
+        }
 
         .search-mode-bar .clear-search {
             margin-left: auto;
@@ -202,10 +227,14 @@
             color: var(--text-secondary);
         }
 
-        .search-mode-bar .clear-search:hover { border-color: var(--border-hover); }
+        .search-mode-bar .clear-search:hover {
+            border-color: var(--border-hover);
+        }
 
         /* ── Main Content ────────────────────────────── */
-        .main { padding: 1.5rem 2rem 2rem; }
+        .main {
+            padding: 1.5rem 2rem 2rem;
+        }
 
         .section-title {
             font-size: 0.8rem;
@@ -253,9 +282,13 @@
             transition: transform 0.25s ease;
         }
 
-        .product-card:hover .img-wrap img { transform: scale(1.03); }
+        .product-card:hover .img-wrap img {
+            transform: scale(1.03);
+        }
 
-        .product-card .info { padding: 0.75rem; }
+        .product-card .info {
+            padding: 0.75rem;
+        }
 
         .product-card .title {
             font-size: 0.8rem;
@@ -289,10 +322,25 @@
             font-weight: 600;
         }
 
-        .badge-category { background: var(--accent-soft); color: var(--text-secondary); }
-        .badge-stock { background: var(--green-bg); color: var(--green); }
-        .badge-oos { background: var(--red-bg); color: var(--red); }
-        .badge-score { background: var(--blue-bg); color: var(--blue); }
+        .badge-category {
+            background: var(--accent-soft);
+            color: var(--text-secondary);
+        }
+
+        .badge-stock {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        .badge-oos {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+
+        .badge-score {
+            background: var(--blue-bg);
+            color: var(--blue);
+        }
 
         /* Out-of-stock overlay */
         .oos-ribbon {
@@ -328,23 +376,36 @@
             transition: all 0.15s;
         }
 
-        .pagination button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-        .pagination button:disabled { opacity: 0.3; cursor: default; }
-        .pagination .page-info { font-size: 0.78rem; color: var(--text-muted); }
+        .pagination button:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .pagination .page-info {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
 
         /* ── Product Detail Modal ────────────────────── */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             z-index: 200;
             align-items: center;
             justify-content: center;
             padding: 2rem;
         }
 
-        .modal-overlay.open { display: flex; }
+        .modal-overlay.open {
+            display: flex;
+        }
 
         .modal {
             background: var(--bg-white);
@@ -353,7 +414,7 @@
             max-width: 900px;
             max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
         }
 
         .modal-header {
@@ -388,9 +449,13 @@
             transition: background 0.15s;
         }
 
-        .modal-close:hover { background: var(--bg-hover); }
+        .modal-close:hover {
+            background: var(--bg-hover);
+        }
 
-        .modal-body { padding: 1.5rem; }
+        .modal-body {
+            padding: 1.5rem;
+        }
 
         .modal-product {
             display: flex;
@@ -407,49 +472,33 @@
             flex-shrink: 0;
         }
 
-        .modal-product-info { flex: 1; }
-        .modal-product-info h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .modal-product-info {
+            flex: 1;
+        }
+
+        .modal-product-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
         .modal-product-info .detail-row {
             font-size: 0.82rem;
             color: var(--text-secondary);
             margin-bottom: 0.3rem;
         }
 
-        .modal-product-info .detail-row strong { color: var(--text); }
-
-        .oos-alert {
-            display: none;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            background: var(--red-bg);
-            border: 1px solid #fecaca;
-            border-radius: var(--radius);
-            margin-top: 1rem;
-            font-size: 0.82rem;
-            color: var(--red);
+        .modal-product-info .detail-row strong {
+            color: var(--text);
         }
 
-        .oos-alert.visible { display: flex; }
 
-        .oos-alert button {
-            margin-left: auto;
-            background: var(--red);
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.78rem;
-            font-family: inherit;
-            font-weight: 500;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .oos-alert button:hover { opacity: 0.9; }
 
         /* ── Horizontal Scroll Row for Recommendations ─ */
-        .rec-section { margin-top: 1.5rem; }
+        .rec-section {
+            margin-top: 1.5rem;
+        }
+
         .rec-section-header {
             font-size: 0.85rem;
             font-weight: 600;
@@ -468,8 +517,14 @@
             scroll-behavior: smooth;
         }
 
-        .rec-scroll::-webkit-scrollbar { height: 4px; }
-        .rec-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+        .rec-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .rec-scroll::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 2px;
+        }
 
         .rec-card {
             flex-shrink: 0;
@@ -482,7 +537,10 @@
             transition: border-color 0.15s, box-shadow 0.15s;
         }
 
-        .rec-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow); }
+        .rec-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow);
+        }
 
         .rec-card img {
             width: 100%;
@@ -530,7 +588,11 @@
             margin-right: 0.6rem;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
         .empty-state {
             text-align: center;
@@ -538,8 +600,14 @@
             color: var(--text-muted);
         }
 
-        .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-        .empty-state p { font-size: 0.85rem; }
+        .empty-state .empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+        }
 
         /* ── Upload Preview ──────────────────────────── */
         .upload-preview {
@@ -553,7 +621,9 @@
             border-radius: var(--radius);
         }
 
-        .upload-preview.visible { display: flex; }
+        .upload-preview.visible {
+            display: flex;
+        }
 
         .upload-preview img {
             width: 48px;
@@ -563,23 +633,63 @@
             border: 1px solid var(--border);
         }
 
-        .upload-preview .upload-text { font-size: 0.8rem; color: var(--text-secondary); }
-        .upload-preview .upload-text strong { color: var(--text); }
+        .upload-preview .upload-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .upload-preview .upload-text strong {
+            color: var(--text);
+        }
 
         /* ── Scrollbar ───────────────────────────────── */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 3px;
+        }
 
         /* ── Responsive ──────────────────────────────── */
         @media (max-width: 768px) {
-            .header { padding: 0 1rem; gap: 0.75rem; }
-            .filters { display: none; }
-            .main { padding: 1rem; }
-            .product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; }
-            .modal-product { flex-direction: column; }
-            .modal-product img { width: 100%; height: auto; }
-            .feature-banner, .search-mode-bar, .upload-preview { margin: 0.75rem 1rem 0; }
+            .header {
+                padding: 0 1rem;
+                gap: 0.75rem;
+            }
+
+            .filters {
+                display: none;
+            }
+
+            .main {
+                padding: 1rem;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .modal-product {
+                flex-direction: column;
+            }
+
+            .modal-product img {
+                width: 100%;
+                height: auto;
+            }
+
+            .feature-banner,
+            .search-mode-bar,
+            .upload-preview {
+                margin: 0.75rem 1rem 0;
+            }
         }
     </style>
 </head>
@@ -598,15 +708,21 @@
             </button>
         </div>
         <div class="filters">
-            <select id="categoryFilter"><option value="">All Categories</option></select>
-            <select id="genderFilter"><option value="">All Genders</option></select>
+            <select id="categoryFilter">
+                <option value="">All Categories</option>
+            </select>
+            <select id="genderFilter">
+                <option value="">All Genders</option>
+            </select>
         </div>
     </header>
 
     <!-- Feature Banner -->
     <div class="feature-banner visible" id="featureBanner">
-        💡 <strong>AI-Powered:</strong>&nbsp;Type natural language queries like "casual blue shirt for summer" · Upload a photo to find similar items · Click a product for outfit suggestions
-        <button class="close-banner" onclick="document.getElementById('featureBanner').classList.remove('visible')">×</button>
+        💡 <strong>AI-Powered:</strong>&nbsp;Type natural language queries like "casual blue shirt for summer" · Upload
+        a photo to find similar items · Click a product for outfit suggestions
+        <button class="close-banner"
+            onclick="document.getElementById('featureBanner').classList.remove('visible')">×</button>
     </div>
 
     <!-- Search Mode Indicator -->
@@ -899,14 +1015,11 @@
                             <div class="detail-row"><strong>Usage:</strong> ${escapeHtml(item.usage)}</div>
                             <div class="detail-row" style="margin-top:0.5rem;">
                                 ${isOos
-                                    ? '<span class="badge badge-oos" style="font-size:0.75rem;padding:0.25rem 0.6rem;">Out of Stock</span>'
-                                    : '<span class="badge badge-stock" style="font-size:0.75rem;padding:0.25rem 0.6rem;">In Stock</span>'
-                                }
+                        ? '<span class="badge badge-oos" style="font-size:0.75rem;padding:0.25rem 0.6rem;">Out of Stock</span>'
+                        : '<span class="badge badge-stock" style="font-size:0.75rem;padding:0.25rem 0.6rem;">In Stock</span>'
+                    }
                             </div>
-                            <div class="oos-alert ${isOos ? 'visible' : ''}" id="oosAlert">
-                                This item is currently unavailable.
-                                <button onclick="loadSimilarAvailable(${item.id})">Find Similar In Stock →</button>
-                            </div>
+
                         </div>
                     </div>
                 `;
@@ -931,13 +1044,7 @@
                     </div>
                 `;
 
-                // Out-of-stock alternatives section (placeholder)
-                html += `
-                    <div class="rec-section" id="oosSection" style="display:none;">
-                        <div class="rec-section-header">✅ Similar Available Items</div>
-                        <div class="rec-scroll" id="oosScroll"></div>
-                    </div>
-                `;
+
 
                 body.innerHTML = html;
 
@@ -979,26 +1086,7 @@
             }
         }
 
-        // ── Out-of-Stock Saver ──────────────────────────────
-        async function loadSimilarAvailable(itemId) {
-            const section = document.getElementById('oosSection');
-            const scroll = document.getElementById('oosScroll');
-            section.style.display = 'block';
-            scroll.innerHTML = '<div class="loading" style="padding:1rem;"><div class="spinner"></div></div>';
 
-            try {
-                const res = await fetch(`${API}/similar/${itemId}?top_k=10&in_stock_only=true`);
-                const data = await res.json();
-
-                if (data.similar_items && data.similar_items.length > 0) {
-                    scroll.innerHTML = renderRecCards(data.similar_items);
-                } else {
-                    scroll.innerHTML = '<div style="padding:1rem;font-size:0.8rem;color:var(--text-muted);">No similar in-stock items found.</div>';
-                }
-            } catch (e) {
-                scroll.innerHTML = '<div style="padding:1rem;font-size:0.8rem;color:var(--red);">Failed to load alternatives.</div>';
-            }
-        }
 
         // ── Pagination ──────────────────────────────────────
         function renderPagination(total, page, perPage) {
@@ -1046,7 +1134,7 @@
         // ── Utilities ───────────────────────────────────────
         function escapeHtml(str) {
             if (!str) return '';
-            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
         function debounce(fn, ms) {
