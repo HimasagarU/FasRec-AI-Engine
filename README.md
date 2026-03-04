@@ -20,10 +20,14 @@ A high-performance, content-based fashion recommendation system that suggests si
 *   **Modern UI**: Dark-themed, responsive frontend with glassmorphism design.
 *   **Cloud-Native**: Images served via **Cloudflare R2** CDN, app deployed on **Render**.
 
+## 🛢 Dataset
+
+*   **Link**: [https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small)
+
 ## 🛠️ Tech Stack
 
 *   **Backend**: Python 3.11, FastAPI, Uvicorn
-*   **AI/ML**: OpenAI CLIP (Vision), SBERT (Text), FAISS (Vector Search)
+*   **AI/ML**: OpenAI CLIP (Vision), SBERT (Metadata), FAISS (Vector Search)
 *   **Frontend**: HTML5, CSS3, Vanilla JS
 *   **Infrastructure**: Docker, Render, Cloudflare R2
 
