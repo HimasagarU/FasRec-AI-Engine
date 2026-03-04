@@ -9,3 +9,4 @@ numpy
 tqdm
 boto3
 python-dotenv
+python-multipart
