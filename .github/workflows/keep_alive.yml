@@ -1,0 +1,20 @@
+name: Keep FasRec Server Alive
+
+on:
+  schedule:
+    # Run every 13 minutes
+    - cron: '*/13 * * * *'
+  workflow_dispatch: # Allows manual triggering for testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render App
+        run: |
+          if [ -z "${{ secrets.RENDER_APP_URL }}" ]; then
+            echo "Error: RENDER_APP_URL secret is not set."
+            exit 1
+          fi
+          curl -s -f "${{ secrets.RENDER_APP_URL }}/keep-alive" || exit 1
+          echo "Successfully pinged the FasRec server."

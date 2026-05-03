@@ -34,6 +34,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/keep-alive")
+async def keep_alive():
+    """Lightweight endpoint to keep the server awake."""
+    return {"status": "alive"}
+
 # ── Startup: load data ──────────────────────────────────────────────────
 
 products_df: pd.DataFrame | None = None
