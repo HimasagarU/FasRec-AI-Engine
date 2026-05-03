@@ -2,8 +2,9 @@ name: Keep FasRec Server Alive
 
 on:
   schedule:
-    # Run every 13 minutes
-    - cron: '*/13 * * * *'
+    # Run every 5 minutes to ensure the Render free tier service doesn't spin down.
+    # Note: GitHub Actions schedule can be delayed, so 5m is safer than 13m.
+    - cron: '*/5 * * * *'
   workflow_dispatch: # Allows manual triggering for testing
 
 jobs:
@@ -12,9 +13,15 @@ jobs:
     steps:
       - name: Ping Render App
         run: |
-          if [ -z "${{ secrets.RENDER_APP_URL }}" ]; then
+          URL="${{ secrets.RENDER_APP_URL }}"
+          if [ -z "$URL" ]; then
             echo "Error: RENDER_APP_URL secret is not set."
             exit 1
           fi
-          curl -s -f "${{ secrets.RENDER_APP_URL }}/keep-alive" || exit 1
+          
+          # Remove trailing slash if present to avoid double slashes
+          URL="${URL%/}"
+          
+          echo "Pinging $URL/keep-alive..."
+          curl -s -L -f "$URL/keep-alive" || { echo "Ping failed! Check if the URL is correct and the server is up."; exit 1; }
           echo "Successfully pinged the FasRec server."
