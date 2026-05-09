@@ -72,7 +72,7 @@ graph TD
 - **Data Processing:** Pandas, NumPy
 - **Backend:** Python 3, FastAPI, Uvicorn
 - **Frontend:** HTML5, Vanilla JavaScript, CSS3
-- **Deployment:** Docker, Render, Cloudflare R2 (optional)
+- **Deployment:** Docker, Render, Cloudflare R2 ()
 
 ## 📁 Project Structure
 
@@ -147,7 +147,7 @@ docker-compose up --build -d
 ## 🔌 API Endpoints
 
 - `GET /` - API Status and Version.
-- `GET /products` - Paginated product listing with optional `search`, `category`, and `gender` filters.
+- `GET /products` - Paginated product listing with  `search`, `category`, and `gender` filters.
 - `GET /recommend/{item_id}` - Fetch top precomputed fusion recommendations for a specific product.
 - `GET /similar/{item_id}` - Alternative endpoint returning scores alongside similar items.
 - `GET /categories` - Retrieve available metadata filters (genders, master categories).
