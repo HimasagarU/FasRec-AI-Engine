@@ -76,17 +76,19 @@ recommendations: dict | None = None
 def startup():
     global products_df, recommendations
 
-    # Load product metadata
-    csv_path = DATA_DIR / "styles.csv"
-    if csv_path.exists():
-        products_df = pd.read_csv(csv_path, on_bad_lines="skip")
+    # Load product metadata — prefer the rich JSON-parsed cache
+    parsed_csv = ARTIFACTS_DIR / "parsed_products.csv"
+    styles_csv = DATA_DIR / "styles.csv"
+
+    if parsed_csv.exists():
+        products_df = pd.read_csv(parsed_csv)
+        print(f"[API] Loaded {len(products_df)} products from parsed_products.csv")
+    elif styles_csv.exists():
+        products_df = pd.read_csv(styles_csv, on_bad_lines="skip")
+        print(f"[API] Loaded {len(products_df)} products from styles.csv (fallback)")
     else:
-        alt_csv = ARTIFACTS_DIR / "styles.csv"
-        if alt_csv.exists():
-            products_df = pd.read_csv(alt_csv, on_bad_lines="skip")
-        else:
-            print("Warning: styles.csv not found in data/ or artifacts/")
-            products_df = pd.DataFrame()
+        print("Warning: No product data found in artifacts/ or data/")
+        products_df = pd.DataFrame()
 
     if not products_df.empty:
         products_df["id"] = products_df["id"].astype(int)

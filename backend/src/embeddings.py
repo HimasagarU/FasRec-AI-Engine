@@ -1,5 +1,7 @@
 """
-Embedding generation using SBERT (text) and CLIP (images).
+Embedding generation using State-of-the-Art (SOTA) models.
+Text: BAAI/bge-base-en-v1.5
+Images: google/siglip-base-patch16-224
 Uses GPU when available.
 """
 import torch
@@ -8,7 +10,6 @@ from pathlib import Path
 from PIL import Image
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
-from transformers import CLIPProcessor, CLIPModel
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -17,19 +18,11 @@ ARTIFACTS_DIR = Path(__file__).resolve().parent.parent / "artifacts"
 
 def generate_text_embeddings(
     texts: list[str],
-    model_name: str = "sentence-transformers/all-mpnet-base-v2",
+    model_name: str = "BAAI/bge-base-en-v1.5",
     batch_size: int = 128,
 ) -> np.ndarray:
     """
-    Generate L2-normalized text embeddings using SBERT.
-
-    Args:
-        texts: list of text strings
-        model_name: HuggingFace model name
-        batch_size: encoding batch size
-
-    Returns:
-        np.ndarray of shape (N, 768), L2-normalized
+    Generate L2-normalized text embeddings using BGE.
     """
     print(f"[Embeddings] Loading text model: {model_name} on {DEVICE}...")
     model = SentenceTransformer(model_name, device=DEVICE)
@@ -48,23 +41,19 @@ def generate_text_embeddings(
 
 def generate_image_embeddings(
     image_paths: list[str],
-    model_name: str = "openai/clip-vit-base-patch32",
+    model_name: str = "google/siglip-base-patch16-224",
     batch_size: int = 64,
 ) -> np.ndarray:
     """
-    Generate L2-normalized image embeddings using CLIP.
-
-    Args:
-        image_paths: list of paths to images
-        model_name: HuggingFace CLIP model name
-        batch_size: processing batch size
-
-    Returns:
-        np.ndarray of shape (N, 512), L2-normalized
+    Generate L2-normalized image embeddings using SigLIP.
+    SigLIP outperforms standard CLIP significantly on retrieval tasks.
     """
-    print(f"[Embeddings] Loading CLIP model: {model_name} on {DEVICE}...")
-    model = CLIPModel.from_pretrained(model_name).to(DEVICE)
-    processor = CLIPProcessor.from_pretrained(model_name)
+    from transformers import AutoImageProcessor, SiglipVisionModel
+
+    print(f"[Embeddings] Loading SigLIP vision model: {model_name} on {DEVICE}...")
+    # Load vision-only model explicitly to avoid tokenizer issues
+    model = SiglipVisionModel.from_pretrained(model_name).to(DEVICE)
+    processor = AutoImageProcessor.from_pretrained(model_name)
     model.eval()
 
     all_embeddings = []
@@ -74,13 +63,11 @@ def generate_image_embeddings(
     for i in tqdm(range(0, len(image_paths), batch_size), desc="Image embeddings"):
         batch_paths = image_paths[i : i + batch_size]
         images = []
-        valid_in_batch = []
 
         for j, p in enumerate(batch_paths):
             try:
                 img = Image.open(p).convert("RGB")
                 images.append(img)
-                valid_in_batch.append(i + j)
             except Exception:
                 failed_indices.append(i + j)
 
@@ -88,11 +75,15 @@ def generate_image_embeddings(
             continue
 
         with torch.no_grad():
-            inputs = processor(images=images, return_tensors="pt", padding=True)
+            inputs = processor(images=images, return_tensors="pt")
             inputs = {k: v.to(DEVICE) for k, v in inputs.items()}
-            # Use the full model to get image features
-            vision_outputs = model.vision_model(pixel_values=inputs["pixel_values"])
-            image_embeds = model.visual_projection(vision_outputs.pooler_output)
+
+            # Forward pass through vision model
+            outputs = model(**inputs)
+
+            # outputs.pooler_output is (batch_size, hidden_dim) — the pooled CLS token
+            image_embeds = outputs.pooler_output
+
             # L2 normalize
             image_embeds = image_embeds / image_embeds.norm(p=2, dim=-1, keepdim=True)
             all_embeddings.append(image_embeds.cpu().numpy())

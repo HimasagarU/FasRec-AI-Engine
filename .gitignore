@@ -8,23 +8,26 @@ __pycache__/
 # Environment
 .env
 
-# Data (images too large for git, CSV needed for API)
+# Data (images & JSON too large for git)
 backend/data/images/
-!backend/data/styles.csv
+backend/data/styles/
 
-# Artifacts (generated, too large for git)
+# Artifacts (generated embeddings/indexes, too large for git)
 backend/artifacts/text_embeddings.npy
 backend/artifacts/image_embeddings.npy
 backend/artifacts/product_ids.npy
 backend/artifacts/text_index.faiss
 backend/artifacts/image_index.faiss
+backend/requirements_local.txt
 
-# Keep precomputed_recs.json (small, needed for serving)
+# Keep these small files needed for serving
 !backend/artifacts/precomputed_recs.json
+!backend/artifacts/parsed_products.csv
 
 # Frontend
 frontend/node_modules/
 frontend/dist/
+frontend/.vite/
 
 # IDE
 .vscode/

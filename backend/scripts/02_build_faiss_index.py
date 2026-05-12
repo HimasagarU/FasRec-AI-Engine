@@ -1,6 +1,9 @@
 """
 Script 02: Build FAISS HNSW indexes for text and image embeddings.
 """
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 import sys
 from pathlib import Path
 

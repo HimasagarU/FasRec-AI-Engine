@@ -1,13 +1,8 @@
-sentence-transformers
-transformers
-Pillow
-faiss-cpu
+# ── Serving (required on Render) ──
 fastapi
 uvicorn[standard]
 pandas
 numpy
-tqdm
-boto3
 python-dotenv
 groq
 sqlalchemy
