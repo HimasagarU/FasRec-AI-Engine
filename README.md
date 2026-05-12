@@ -16,32 +16,32 @@ This engine is built on the [Fashion Product Images Dataset](https://www.kaggle.
 
 ```mermaid
 graph TD
-    subgraph Offline AI Pipeline (Local GPU)
-        JSON[JSON Metadata]<br/>IMG[Product Images] --> DL[Data Loader<br/>Builds Canonical Text]
+    subgraph Offline_Pipeline ["Offline AI Pipeline (Local GPU)"]
+        INPUTS["JSON Metadata<br/>Product Images"] --> DL["Data Loader<br/>Builds Canonical Text"]
         
-        DL --> |Canonical Text| TE[Text Embeddings<br/>BAAI/bge-base-en-v1.5]
-        DL --> |Images| IE[Image Embeddings<br/>google/siglip-base-patch16-224]
+        DL -->|Canonical Text| TE["Text Embeddings<br/>BAAI/bge-base-en-v1.5"]
+        DL -->|Images| IE["Image Embeddings<br/>google/siglip-base-patch16-224"]
         
         TE --> FT[FAISS Text Index]
         IE --> FI[FAISS Image Index]
         
-        FT & FI --> FUSE[Reciprocal Rank Fusion<br/>RRF Algorithm]
+        FT & FI --> FUSE["Reciprocal Rank Fusion<br/>RRF Algorithm"]
         FUSE --> PRE[precomputed_recs.json]
         DL --> CACHE[parsed_products.csv]
     end
 
-    subgraph Production Backend (Render)
+    subgraph Backend ["Production Backend (Render)"]
         API[FastAPI Server]
-        DB[(Supabase PostgreSQL<br/>Users, Favorites, Outfits)]
-        LLM[Groq API<br/>LLaMA 3.3 70B]
+        DB[("Supabase PostgreSQL<br/>Users, Favorites, Outfits")]
+        LLM["Groq API<br/>LLaMA 3.3 70B"]
         
         PRE & CACHE -.->|Loaded at Startup| API
         API <--> DB
         API <-->|Generates Outfits| LLM
     end
 
-    subgraph Production Frontend (Vercel)
-        UI[React + Vite SPA<br/>Glassmorphism UI]
+    subgraph Frontend ["Production Frontend (Vercel)"]
+        UI["React + Vite SPA<br/>Glassmorphism UI"]
         UI <-->|REST / JSON| API
     end
 ```
