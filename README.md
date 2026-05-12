@@ -1,160 +1,115 @@
-# FasRec – Fashion Recommendation Engine
+# FasRec – Full-Stack GenAI Fashion Engine
 
-FasRec is an end-to-end AI-powered fashion recommendation system. It utilizes a hybrid multimodal approach, generating embeddings for both product text descriptions and product images to provide highly accurate visually and semantically similar fashion item recommendations.
+FasRec is a production-grade, AI-powered fashion recommendation and styling platform. It uses a state-of-the-art hybrid multimodal offline pipeline to find visually and semantically similar items, coupled with a dynamic LLaMA 3.3-70B integration that generates real-time, catalog-grounded outfit recommendations.
 
-The system uses an offline pipeline to compute and cache recommendations and a high-performance FastAPI backend to serve the precomputed recommendations to a dynamic, modern frontend interface.
+![FasRec Preview](https://img.shields.io/badge/Status-Production_Ready-success)
+![Frontend](https://img.shields.io/badge/Frontend-React_18_%7C_Vite-61DAFB?logo=react)
+![Backend](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi)
+![AI](https://img.shields.io/badge/AI-SigLIP_%7C_BGE_%7C_LLaMA_3.3-FF9D00)
 
-## 🏗️ End-to-End System Architecture
+## 📊 Dataset
+This engine is built on the [Fashion Product Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset). It utilizes both the rich JSON metadata files (for deep semantic text features like Fit, Occasion, and Descriptions) and the high-resolution product imagery.
+
+---
+
+## 🏗️ System Architecture
 
 ```mermaid
 graph TD
-    subgraph Data Layer
-        CSV[styles.csv<br/>Product Metadata]
-        IMG[Product Images]
+    subgraph Offline AI Pipeline (Local GPU)
+        JSON[JSON Metadata]<br/>IMG[Product Images] --> DL[Data Loader<br/>Builds Canonical Text]
+        
+        DL --> |Canonical Text| TE[Text Embeddings<br/>BAAI/bge-base-en-v1.5]
+        DL --> |Images| IE[Image Embeddings<br/>google/siglip-base-patch16-224]
+        
+        TE --> FT[FAISS Text Index]
+        IE --> FI[FAISS Image Index]
+        
+        FT & FI --> FUSE[Reciprocal Rank Fusion<br/>RRF Algorithm]
+        FUSE --> PRE[precomputed_recs.json]
+        DL --> CACHE[parsed_products.csv]
     end
 
-    subgraph Offline Precomputation Pipeline
-        DL[Data Loader<br/>Clean & Merge]
+    subgraph Production Backend (Render)
+        API[FastAPI Server]
+        DB[(Supabase PostgreSQL<br/>Users, Favorites, Outfits)]
+        LLM[Groq API<br/>LLaMA 3.3 70B]
         
-        subgraph Embedding Generation
-            TE[Text Embeddings<br/>SBERT: all-mpnet-base-v2]
-            IE[Image Embeddings<br/>CLIP: clip-vit-base-patch32]
-        end
-        
-        subgraph Vector Search
-            FT[FAISS Text Index<br/>HNSW, Inner Product]
-            FI[FAISS Image Index<br/>HNSW, Inner Product]
-        end
-        
-        FUSE[Fusion Recommender<br/>Weighted Fusion α=0.5]
-        PRE[Precomputed Recs<br/>JSON]
-        
-        DL --> |Text Context| TE
-        DL --> |Images| IE
-        IMG --> IE
-        CSV --> DL
-        
-        TE --> FT
-        IE --> FI
-        
-        FT --> FUSE
-        FI --> FUSE
-        FUSE --> PRE
+        PRE & CACHE -.->|Loaded at Startup| API
+        API <--> DB
+        API <-->|Generates Outfits| LLM
     end
 
-    subgraph Online Serving System
-        API[FastAPI Backend]
-        PRE --> API
-        CSV --> API
-        
-        CDN[Cloudflare R2 CDN<br/>or Local Images]
-        CDN -.-> API
-    end
-
-    subgraph Frontend Application
-        UI[Web UI<br/>Vanilla JS + CSS Glassmorphism]
-        API <-->|REST API / JSON| UI
+    subgraph Production Frontend (Vercel)
+        UI[React + Vite SPA<br/>Glassmorphism UI]
+        UI <-->|REST / JSON| API
     end
 ```
 
-## ✨ Features
+## ✨ Key Features
 
-- **Multimodal AI Recommendations:** Combines semantic text similarity (Sentence Transformers/SBERT) and visual similarity (OpenAI CLIP) for robust results.
-- **High-Performance Vector Search:** Utilizes FAISS HNSW indexes (GPU accelerated if available) for extremely fast neighbor retrieval.
-- **FastAPI Backend:** A lightweight, async REST API that serves precomputed top-K recommendations for sub-millisecond response times.
-- **Modern UI:** A beautiful, responsive glassmorphism web interface to browse products and view similar items.
-- **CDN Integration:** Easily serves images from local storage or scalable Cloudflare R2 object storage.
-- **Dockerized:** Fully containerized backend using `docker-compose` for rapid deployment.
+- **SOTA Multimodal Retrieval**: Generates text embeddings using `BAAI/bge-base-en-v1.5` (from rich canonical JSON text) and image embeddings using Google's `siglip-base-patch16-224`.
+- **Reciprocal Rank Fusion (RRF)**: Replaces static score weights with rank-based mathematical fusion, perfectly balancing visual and semantic similarity (normalized for UI percentage matching).
+- **GenAI Outfit Stylist**: Integrates Groq (LLaMA 3.3-70B) to act as a personal stylist. The LLM is grounded using actual database `articleTypes`, ensuring suggested outfit pieces perfectly match items available in the 44k catalog.
+- **Smart Catalog Search**: Multi-strategy fallback search (Exact → Word-by-Word → Fuzzy) maps LLM text generations back to real database items.
+- **User Persistence & Dashboards**: Full authentication system (bcrypt/JWT) with Supabase PostgreSQL to save favorite items and AI-generated outfits.
+- **Monorepo Structure**: Clean separation of concerns with independent deployability to Render (Backend) and Vercel (Frontend).
 
 ## 🛠️ Technology Stack
 
-- **Machine Learning / AI:** PyTorch, Sentence-Transformers (SBERT), Transformers (CLIP), FAISS (Facebook AI Similarity Search)
-- **Data Processing:** Pandas, NumPy
-- **Backend:** Python 3, FastAPI, Uvicorn
-- **Frontend:** HTML5, Vanilla JavaScript, CSS3
-- **Deployment:** Docker, Render, Cloudflare R2 ()
+- **Machine Learning**: PyTorch, HuggingFace Transformers, FAISS
+- **Backend**: Python 3.11, FastAPI, SQLAlchemy, PostgreSQL (Supabase)
+- **Frontend**: React 18, Vite, React Router, Custom CSS (Glassmorphism)
+- **Generative AI**: Groq (LLaMA 3.3-70B-Versatile)
+- **Deployment**: Render (API), Vercel (Web), Cloudflare R2 (Image CDN)
 
-## 📁 Project Structure
+## 📁 Monorepo Structure
 
 ```text
 FasRec/
-├── data/
-│   ├── images/               # Raw product images
-│   └── styles.csv            # Product metadata
-├── artifacts/                # Generated assets
-│   ├── text_index.faiss      # FAISS index for text
-│   ├── image_index.faiss     # FAISS index for images
-│   ├── product_ids.npy       # Mapping array
-│   └── precomputed_recs.json # Top-K recommendations JSON
-├── src/                      # Core Backend Modules
-│   ├── api.py                # FastAPI Application
-│   ├── data_loader.py        # Data preprocessing
-│   ├── embeddings.py         # SBERT & CLIP embedding logic
-│   ├── faiss_index.py        # Vector database management
-│   └── recommender.py        # Fusion scoring logic
-├── scripts/                  # Offline Pipeline Scripts
-│   ├── 01_generate_embeddings.py
-│   ├── 02_build_faiss_index.py
-│   ├── 03_precompute_recommendations.py
-│   ├── 04_evaluate.py
-│   └── 05_upload_images_r2.py
-├── frontend/                 # Web Application
-│   └── index.html
-├── requirements.txt          # Python dependencies
-├── Dockerfile                # API container definition
-└── docker-compose.yml        # Multi-container orchestration
+├── backend/                  # FastAPI Application & AI Pipeline
+│   ├── artifacts/            # Generated assets (precomputed_recs.json, FAISS indexes)
+│   ├── data/                 # Raw dataset (styles/, images/)
+│   ├── scripts/              # Offline AI processing scripts (01 to 03)
+│   ├── src/                  # API, Auth, LLM Orchestration, DB Models
+│   └── requirements.txt      # Slimmed deps for Render deployment
+├── frontend/                 # React Web Application
+│   ├── src/                  # React Components, Pages, AuthContext
+│   ├── index.html            # Vite entry point
+│   └── package.json          # Node dependencies
+├── render.yaml               # Render deployment blueprint
+└── vercel.json               # Vercel SPA routing rules
 ```
 
-## 🚀 Setup & Installation
+## 🚀 Setup & Execution
 
-### 1. Prerequisites
-- Python 3.10+
-- (Optional) CUDA-enabled GPU for faster embedding generation.
-
-### 2. Install Dependencies
+### 1. Offline AI Pipeline (Local)
+To precompute the recommendations using your local GPU:
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 3. Data Preparation
-Place your dataset in the `data/` directory:
-- `data/styles.csv`
-- `data/images/12345.jpg`, etc.
-
-### 4. Run the Offline Pipeline
-Generate embeddings, build FAISS indexes, and precompute the recommendations.
-```bash
+cd backend
+pip install -r requirements_ml.txt # Install torch, transformers, faiss
 python scripts/01_generate_embeddings.py
 python scripts/02_build_faiss_index.py
 python scripts/03_precompute_recommendations.py
 ```
+*Note: This generates `precomputed_recs.json` and `parsed_products.csv` which are tracked in git for the production server.*
 
-### 5. Start the API Server
+### 2. Backend Development Server
 ```bash
-# Using uvicorn directly
+cd backend
+pip install -r requirements.txt
 uvicorn src.api:app --reload --host 0.0.0.0 --port 8000
-
-# OR using Docker Compose
-docker-compose up --build -d
 ```
+*Requires `.env` with `DATABASE_URL` (Supabase), `GROQ_API_KEY`, and `JWT_SECRET_KEY`.*
 
-### 6. Access the Application
-- **Frontend UI**: [http://localhost:8000/app](http://localhost:8000/app)
-- **API Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
-
-## 🔌 API Endpoints
-
-- `GET /` - API Status and Version.
-- `GET /products` - Paginated product listing with  `search`, `category`, and `gender` filters.
-- `GET /recommend/{item_id}` - Fetch top precomputed fusion recommendations for a specific product.
-- `GET /similar/{item_id}` - Alternative endpoint returning scores alongside similar items.
-- `GET /categories` - Retrieve available metadata filters (genders, master categories).
-
-## 📊 Offline Evaluation
-
-The project includes an evaluation script to measure the precision and recall of the recommendation engine using a holdout/synthetic testing strategy.
+### 3. Frontend Development Server
 ```bash
-python scripts/04_evaluate.py
+cd frontend
+npm install
+npm run dev
 ```
+
+## 🌍 Production Deployment
+
+1. **Backend**: Deployed to Render via the included `render.yaml` blueprint. It installs only the lightweight serving dependencies (no PyTorch/FAISS required) and loads the precomputed JSON artifacts into memory.
+2. **Frontend**: Deployed to Vercel via the Vercel GitHub integration. Configured with `vercel.json` to support React Router SPA navigation. Ensure `VITE_API_URL` is set to the Render backend URL.
