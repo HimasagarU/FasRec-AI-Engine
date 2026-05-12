@@ -9,18 +9,22 @@ __pycache__/
 .env
 
 # Data (images too large for git, CSV needed for API)
-data/images/
-!data/styles.csv
+backend/data/images/
+!backend/data/styles.csv
 
 # Artifacts (generated, too large for git)
-artifacts/text_embeddings.npy
-artifacts/image_embeddings.npy
-artifacts/product_ids.npy
-artifacts/text_index.faiss
-artifacts/image_index.faiss
+backend/artifacts/text_embeddings.npy
+backend/artifacts/image_embeddings.npy
+backend/artifacts/product_ids.npy
+backend/artifacts/text_index.faiss
+backend/artifacts/image_index.faiss
 
 # Keep precomputed_recs.json (small, needed for serving)
-!artifacts/precomputed_recs.json
+!backend/artifacts/precomputed_recs.json
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
 
 # IDE
 .vscode/
@@ -32,3 +36,6 @@ Thumbs.db
 
 # Gemini
 .gemini/
+
+# Misc
+walkthrough.md.resolved

@@ -9,3 +9,10 @@ numpy
 tqdm
 boto3
 python-dotenv
+groq
+sqlalchemy
+bcrypt
+python-jose[cryptography]
+pydantic[email]
+psycopg2-binary
+python-multipart

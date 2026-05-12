@@ -10,11 +10,5 @@ services:
         value: "3.11.11"
       - key: R2_PUBLIC_URL
         sync: false
-      - key: DATABASE_URL
-        sync: false
-      - key: GROQ_API_KEY
-        sync: false
-      - key: JWT_SECRET_KEY
-        sync: false
     plan: free
     healthCheckPath: /

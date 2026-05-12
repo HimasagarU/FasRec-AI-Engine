@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python deps (no GPU in container by default)
+# Install Python deps
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -19,10 +19,9 @@ WORKDIR /app
 
 # Copy source code
 COPY src/ ./src/
-COPY frontend/ ./frontend/
 COPY data/styles.csv ./data/styles.csv
 
-# Copy precomputed artifacts (embeddings NOT needed at serve time)
+# Copy precomputed artifacts
 COPY artifacts/precomputed_recs.json ./artifacts/precomputed_recs.json
 
 # Create images directory mount point
