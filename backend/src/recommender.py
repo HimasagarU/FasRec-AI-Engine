@@ -73,7 +73,7 @@ def compute_fusion_scores(
             if fusion_strategy == "rrf":
                 # Reciprocal Rank Fusion
                 rrf_score = (1.0 / (rrf_k + data["text_rank"])) + (1.0 / (rrf_k + data["image_rank"]))
-                scored.append({"index": idx, "score": round(rrf_score, 6)})
+                scored.append({"index": idx, "score": rrf_score})
             else:
                 # Linear score fusion
                 fused = alpha * data["text_sim"] + (1 - alpha) * data["image_sim"]
@@ -81,7 +81,17 @@ def compute_fusion_scores(
 
         # 4. Sort and take top-K
         scored.sort(key=lambda x: x["score"], reverse=True)
-        recommendations[i] = scored[:top_k]
+        top_items = scored[:top_k]
+
+        # 5. Normalize RRF scores to 0-1 range for display
+        if fusion_strategy == "rrf" and top_items:
+            max_score = top_items[0]["score"]
+            # Theoretical max RRF = 2/(k+1), use the actual best score for relative ranking
+            if max_score > 0:
+                for item in top_items:
+                    item["score"] = round(item["score"] / max_score, 4)
+
+        recommendations[i] = top_items
 
     return recommendations
 
