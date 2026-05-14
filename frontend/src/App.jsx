@@ -34,7 +34,7 @@ const AppContent = () => {
       </main>
       <footer style={{ borderTop: '1px solid var(--border)', padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
         <p>FasRec AI — GenAI Fashion Recommendation Engine</p>
-        <p style={{ marginTop: '0.25rem', fontSize: '0.75rem' }}>CLIP + SBERT → FAISS HNSW → LLaMA 3.3-70B</p>
+        <p style={{ marginTop: '0.25rem', fontSize: '0.75rem' }}>SigLIP + BGE → FAISS HNSW → LLaMA 3.3-70B</p>
       </footer>
     </div>
   );

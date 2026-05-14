@@ -26,7 +26,7 @@ export default function Landing() {
         <div className="container" style={{ position: 'relative', zIndex: 2, textAlign: 'center', paddingTop: '6rem', paddingBottom: '6rem' }}>
           <div style={{ marginBottom: '1.5rem' }}>
             <span className="tag" style={{ background: 'rgba(99,102,241,0.2)', color: '#a78bfa', fontSize: '0.85rem', padding: '0.4rem 1rem' }}>
-              Powered by LLaMA 3.3-70B × CLIP × FAISS
+              Powered by LLaMA 3.3-70B × SigLIP × BGE
             </span>
           </div>
           <h1 style={{ fontSize: '3.5rem', fontWeight: 800, lineHeight: 1.1, marginBottom: '1.5rem', maxWidth: '700px', margin: '0 auto 1.5rem' }}>
@@ -67,7 +67,7 @@ export default function Landing() {
             </div>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 600, marginBottom: '0.5rem' }}>Sub-100ms Retrieval</h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-              CLIP + SBERT multimodal embeddings fused into FAISS HNSW index for lightning-fast similarity search.
+              SigLIP + BGE multimodal embeddings fused into FAISS HNSW index for lightning-fast similarity search.
             </p>
           </div>
           <div className="glass-panel" style={{ padding: '2rem' }}>
