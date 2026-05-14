@@ -227,10 +227,12 @@ def search_products_by_criteria(article_type: str = "", color: str = "",
 # ── Endpoints ────────────────────────────────────────────────────────────
 
 @app.get("/")
+@app.head("/")
 def root():
     return {"message": "Fashion Recommendation Engine API", "version": "2.0.0"}
 
 @app.get("/keep-alive")
+@app.head("/keep-alive")
 async def keep_alive():
     return {"status": "alive"}
 
@@ -276,6 +278,7 @@ def read_users_me(current_user: models.User = Depends(get_current_user)):
 # ── Products & Recommendations ───────────────────────────────────────────
 
 @app.get("/products")
+@app.head("/products")
 def list_products(
     page: int = Query(1, ge=1),
     per_page: int = Query(40, ge=1, le=200),
@@ -406,6 +409,7 @@ def get_similar(item_id: int, top_k: int = Query(10, ge=1, le=50)):
     }
 
 @app.get("/categories")
+@app.head("/categories")
 def get_categories():
     if products_df is None or products_df.empty:
         return {"masterCategories": [], "genders": []}
