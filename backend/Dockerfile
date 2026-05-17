@@ -19,12 +19,12 @@ WORKDIR /app
 
 # Copy source code
 COPY src/ ./src/
+
+# Copy only serving-time catalog data and recommendation artifacts.
+# Full images are served from Cloudflare R2 via R2_PUBLIC_URL.
 COPY data/styles.csv ./data/styles.csv
-
-# Copy precomputed artifacts
+COPY artifacts/parsed_products.csv ./artifacts/parsed_products.csv
 COPY artifacts/precomputed_recs.json ./artifacts/precomputed_recs.json
-
-# Create images directory mount point
 RUN mkdir -p ./data/images
 
 EXPOSE 8000

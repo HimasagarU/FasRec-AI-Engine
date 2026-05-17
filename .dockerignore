@@ -2,6 +2,15 @@ __pycache__
 *.pyc
 .git
 .env
+backend/data/images
+backend/data/styles
+data/images
+data/styles
+backend/artifacts/text_embeddings.npy
+backend/artifacts/image_embeddings.npy
+backend/artifacts/product_ids.npy
+backend/artifacts/text_index.faiss
+backend/artifacts/image_index.faiss
 artifacts/text_embeddings.npy
 artifacts/image_embeddings.npy
 artifacts/product_ids.npy

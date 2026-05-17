@@ -1,3 +1,14 @@
+---
+title: FasRec
+emoji: 👗
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 8000
+pinned: false
+license: mit
+---
+
 # FasRec – Full-Stack GenAI Fashion Engine
 
 FasRec is a production-grade, AI-powered fashion recommendation and styling platform. It uses a state-of-the-art hybrid multimodal offline pipeline to find visually and semantically similar items, coupled with a dynamic LLaMA 3.3-70B integration that generates real-time, catalog-grounded outfit recommendations.
@@ -113,3 +124,37 @@ npm run dev
 
 1. **Backend**: Deployed to Render via the included `render.yaml` blueprint. It installs only the lightweight serving dependencies (no PyTorch/FAISS required) and loads the precomputed JSON artifacts into memory.
 2. **Frontend**: Deployed to Vercel via the Vercel GitHub integration. Configured with `vercel.json` to support React Router SPA navigation. Ensure `VITE_API_URL` is set to the Render backend URL.
+
+### Hugging Face Spaces deployment notes
+
+This backend can also run as a Docker Space. Hugging Face reads the YAML block at the top of this README; the important values are:
+
+```yaml
+sdk: docker
+app_port: 8000
+```
+
+Required Space secrets / variables:
+
+- `R2_PUBLIC_URL`: Public Cloudflare R2 base URL for product images. Do not commit image files from `backend/data/images/`.
+- `GROQ_API_KEY`: Required only for `/recommend/{item_id}/narration`.
+- `JWT_SECRET_KEY`: Required for auth token signing.
+- `DATABASE_URL`: Optional. If omitted, the backend falls back to SQLite. For persistent users/favorites/outfits, use a hosted PostgreSQL URL.
+
+Files that must be included in the Docker image:
+
+- `backend/data/styles.csv`
+- `backend/artifacts/parsed_products.csv`
+- `backend/artifacts/precomputed_recs.json`
+
+Files intentionally ignored because they are local/offline or served from R2:
+
+- `backend/data/images/`
+- `backend/data/styles/`
+- `backend/artifacts/text_embeddings.npy`
+- `backend/artifacts/image_embeddings.npy`
+- `backend/artifacts/product_ids.npy`
+- `backend/artifacts/text_index.faiss`
+- `backend/artifacts/image_index.faiss`
+
+When deployment logs stop at `Uvicorn running on http://0.0.0.0:8000`, the API process is running and waiting for requests. Check the Space root URL or `/products`; startup is not expected to print more logs until traffic arrives.
