@@ -1,5 +1,6 @@
 import os
 import json
+import traceback
 from groq import Groq
 from fastapi import HTTPException
 
@@ -105,4 +106,6 @@ Respond in strict JSON:
         return result
     except Exception as e:
         print(f"[LLM Error] {e}")
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Failed to generate outfit narration: {str(e)}")
+
