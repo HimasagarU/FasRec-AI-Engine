@@ -19,6 +19,7 @@ def generate_outfit_narration(query_product: dict, recommended_products: list[di
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             raise HTTPException(status_code=500, detail="GROQ_API_KEY is not configured on the server.")
+        api_key = api_key.strip()  # Safety: remove any accidental trailing newlines (\n) or spaces
         client = Groq(api_key=api_key)
 
     # Format the query product details
