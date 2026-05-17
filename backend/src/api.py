@@ -31,7 +31,8 @@ try:
     Base.metadata.create_all(bind=engine)
     print("[DB] Tables created/verified successfully.")
 except Exception as e:
-    print(f"Warning: Could not connect to database to create tables: {e}")
+    # Sanitized logging to prevent database credentials leak
+    print("Warning: Could not connect to database to create tables. Database features may be unavailable.")
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,7 +92,14 @@ def startup():
     global products_df, recommendations
 
     if R2_PUBLIC_URL:
-        print(f"[API] R2_PUBLIC_URL configured: {_normalized_r2_base_url()}/images/<product_id>.jpg")
+        # Mask the public R2 URL subdomain for logging security
+        url_base = _normalized_r2_base_url()
+        masked_url = url_base
+        if "pub-" in url_base:
+            parts = url_base.split(".")
+            if len(parts) > 1:
+                masked_url = f"{parts[0][:12]}...{parts[-1]}"
+        print(f"[API] Cloudflare R2 image serving enabled (CDN URL masked for security: {masked_url}/images/<product_id>.jpg)")
     else:
         print("[API] R2_PUBLIC_URL is empty. Falling back to local /images/... paths.")
 

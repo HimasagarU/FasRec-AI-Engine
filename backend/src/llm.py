@@ -106,7 +106,13 @@ Respond in strict JSON:
         result = json.loads(response_content)
         return result
     except Exception as e:
-        print(f"[LLM Error] {e}")
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"Failed to generate outfit narration: {str(e)}")
+        # Sanitize error message to prevent any API keys/headers from leaking in logs or HTTP responses
+        err_msg = str(e)
+        if "gsk_" in err_msg:
+            err_msg = "Invalid or malformed API key in Groq API request."
+        elif "Bearer" in err_msg:
+            err_msg = "Authorization or protocol error in Groq API request."
+            
+        print(f"[LLM Error] {err_msg}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate outfit narration: {err_msg}")
 
