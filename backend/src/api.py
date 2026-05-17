@@ -40,7 +40,21 @@ ARTIFACTS_DIR = BASE_DIR / "artifacts"
 IMAGES_DIR = DATA_DIR / "images"
 
 # R2 public URL (set via env var for CDN image serving)
-R2_PUBLIC_URL = os.getenv("R2_PUBLIC_URL", "").rstrip("/")
+R2_PUBLIC_URL = os.getenv("R2_PUBLIC_URL", "").strip().rstrip("/")
+
+
+def _normalized_r2_base_url() -> str:
+    """
+    Accept both of these env styles:
+      1) https://cdn.example.com
+      2) https://cdn.example.com/images
+    and normalize to the bucket/site base (without trailing /images).
+    """
+    if not R2_PUBLIC_URL:
+        return ""
+    if R2_PUBLIC_URL.lower().endswith("/images"):
+        return R2_PUBLIC_URL[:-7]
+    return R2_PUBLIC_URL
 
 app = FastAPI(title="Fashion Recommendation Engine", version="2.0.0")
 
@@ -75,6 +89,11 @@ recommendations: dict | None = None
 @app.on_event("startup")
 def startup():
     global products_df, recommendations
+
+    if R2_PUBLIC_URL:
+        print(f"[API] R2_PUBLIC_URL configured: {_normalized_r2_base_url()}/images/<product_id>.jpg")
+    else:
+        print("[API] R2_PUBLIC_URL is empty. Falling back to local /images/... paths.")
 
     # Load product metadata — prefer the rich JSON-parsed cache
     parsed_csv = ARTIFACTS_DIR / "parsed_products.csv"
@@ -111,8 +130,9 @@ def startup():
 # ── Helpers ──────────────────────────────────────────────────────────────
 
 def _image_url(product_id: int) -> str:
-    if R2_PUBLIC_URL:
-        return f"{R2_PUBLIC_URL}/images/{product_id}.jpg"
+    r2_base = _normalized_r2_base_url()
+    if r2_base:
+        return f"{r2_base}/images/{product_id}.jpg"
     return f"/images/{product_id}.jpg"
 
 def _product_to_dict(row) -> dict:
